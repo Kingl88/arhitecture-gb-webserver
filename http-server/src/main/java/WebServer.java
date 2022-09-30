@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class WebServer {
-    private static String WWW = "C:\\Users\\siarh\\IdeaProjects\\arhitecture-gb-webserver\\www";
+    private static final String WWW = "C:\\Users\\siarh\\IdeaProjects\\arhitecture-gb-webserver\\www";
 
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(8088)) {
