@@ -1,5 +1,6 @@
 package ru.gb;
 
+import ru.gb.domain.HttpResponse;
 import ru.gb.logger.ConsoleLogger;
 import ru.gb.logger.Logger;
 
@@ -7,7 +8,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RequestHandler implements Runnable {
 
@@ -23,30 +26,21 @@ public class RequestHandler implements Runnable {
 
     @Override
     public void run() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "text/html; charset=utf-8");
 
         List<String> request = socketService.readRequest();
 
-        // TODO use here implementation of interface RequestParser
-        String[] parts = request.get(0).split(" ");
-
-        Path path = Paths.get(WWW, parts[1]);
+        Path path = Paths.get(WWW, new RequestParserImpl().parse(request).getPath());
         if (!Files.exists(path)) {
-            // TODO use implementation of interface ResponseSerializer
-            socketService.writeResponse(
-                    "HTTP/1.1 404 NOT_FOUND\n" +
-                            "Content-Type: text/html; charset=utf-8\n" +
-                            "\n",
-                    new StringReader("<h1>Файл не найден!</h1>\n")
-            );
+            HttpResponse response = new HttpResponse(404, headers, new StringReader("<h1>Файл не найден!</h1>\n"));
+            socketService.writeResponse(response, new ResponseSerializerImpl());
             return;
         }
 
         try {
-            // TODO use implementation of interface ResponseSerializer
-            socketService.writeResponse("HTTP/1.1 200 OK\n" +
-                            "Content-Type: text/html; charset=utf-8\n" +
-                            "\n",
-                    Files.newBufferedReader(path));
+            HttpResponse response = new HttpResponse(200, headers, Files.newBufferedReader(path));
+            socketService.writeResponse(response, new ResponseSerializerImpl());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
