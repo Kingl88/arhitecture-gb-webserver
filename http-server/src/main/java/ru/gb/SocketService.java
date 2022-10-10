@@ -1,5 +1,6 @@
 package ru.gb;
 
+import ru.gb.domain.HttpResponse;
 import ru.gb.logger.ConsoleLogger;
 import ru.gb.logger.Logger;
 
@@ -39,13 +40,11 @@ public class SocketService implements Closeable {
         }
     }
 
-    public void writeResponse(String headers, Reader reader) {
+    public void writeResponse(HttpResponse response, ResponseSerializer serializer) {
         try {
             PrintWriter output = new PrintWriter(socket.getOutputStream());
-            output.print(headers);
-            if ( reader != null) {
-                reader.transferTo(output);
-            }
+            String responseString = serializer.serialize(response);
+            output.print(responseString);
             output.flush();
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
