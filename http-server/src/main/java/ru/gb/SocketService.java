@@ -1,8 +1,8 @@
 package ru.gb;
 
 import ru.gb.domain.HttpResponse;
-import ru.gb.logger.ConsoleLogger;
 import ru.gb.logger.Logger;
+import ru.gb.logger.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SocketService implements Closeable {
 
-    private static final Logger logger = new ConsoleLogger();
+    private static final Logger logger = LoggerFactory.create();
 
     private final Socket socket;
 

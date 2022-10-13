@@ -1,8 +1,8 @@
 package ru.gb;
 
 import ru.gb.domain.HttpResponse;
-import ru.gb.logger.ConsoleLogger;
 import ru.gb.logger.Logger;
+import ru.gb.logger.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -16,7 +16,7 @@ public class RequestHandler implements Runnable {
 
     private static final String WWW = "C:/Users/siarh/IdeaProjects/arhitecture-gb-webserver/www/";
 
-    private static final Logger logger = new ConsoleLogger();
+    private static final Logger logger = LoggerFactory.create("RequestHandlerLog.txt");
 
     private final SocketService socketService;
 
@@ -33,13 +33,22 @@ public class RequestHandler implements Runnable {
 
         Path path = Paths.get(WWW, new RequestParserImpl().parse(request).getPath());
         if (!Files.exists(path)) {
-            HttpResponse response = new HttpResponse(404, headers, new StringReader("<h1>Файл не найден!</h1>\n"));
+            HttpResponse response = HttpResponse.createResponseBuilder()
+                    .withStatusCode(404)
+                    .withHeaders(headers)
+                    .withBody(new StringReader("<h1>Файл не найден!</h1>\n"))
+                    .build();
             socketService.writeResponse(response, new ResponseSerializerImpl());
             return;
         }
 
         try {
-            HttpResponse response = new HttpResponse(200, headers, Files.newBufferedReader(path));
+            HttpResponse response = HttpResponse.createResponseBuilder()
+                    .withStatusCode(200)
+                    .withHeaders(headers)
+                    .withBody(Files.newBufferedReader(path))
+                    .build();
+
             socketService.writeResponse(response, new ResponseSerializerImpl());
         } catch (IOException e) {
             throw new RuntimeException(e);
