@@ -7,6 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 public class RequestParserImpl implements RequestParser {
+    public static RequestParserImpl createRequestParser(){
+        return new RequestParserImpl();
+    }
+
+    private RequestParserImpl() {
+    }
+
     @Override
     public HttpRequest parse(List<String> rawRequest) {
         String method = rawRequest.get(0).split(" ")[0];

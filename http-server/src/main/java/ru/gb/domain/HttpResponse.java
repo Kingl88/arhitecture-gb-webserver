@@ -1,6 +1,5 @@
 package ru.gb.domain;
 
-import javax.swing.plaf.synth.SynthRadioButtonMenuItemUI;
 import java.io.Reader;
 import java.util.Map;
 

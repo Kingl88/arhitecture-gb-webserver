@@ -1,5 +1,6 @@
-package ru.gb;
+package ru.gb.service;
 
+import ru.gb.ResponseSerializer;
 import ru.gb.domain.HttpResponse;
 import ru.gb.logger.Logger;
 import ru.gb.logger.LoggerFactory;
@@ -10,13 +11,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SocketService implements Closeable {
+public class SocketServiceImpl implements SocketService {
 
     private static final Logger logger = LoggerFactory.create();
 
     private final Socket socket;
 
-    public SocketService(Socket socket) {
+    SocketServiceImpl(Socket socket) {
         this.socket = socket;
     }
 
