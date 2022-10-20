@@ -20,6 +20,7 @@ public class HttpServer {
 
     public static void main(String[] args) {
         Config config = new ConfigFromFile("./../../../server.properties");
+        MethodHandler handler = MethodHandlerFactory.create(config);
         try (ServerSocket serverSocket = new ServerSocket(config.getPort())) {
             logger.info("Server started!");
 
@@ -27,7 +28,6 @@ public class HttpServer {
                 Socket socket = serverSocket.accept();
                 logger.info("New client connected!");
                 SocketService socketService = SocketServiceFactory.createSocketService(socket);
-                MethodHandler handler = MethodHandlerFactory.create(config);
                 new Thread(new RequestHandler(RequestParserImpl.createRequestParser(),
                         socketService,handler)).start();
             }
