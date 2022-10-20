@@ -9,10 +9,10 @@ public class UserRepository {
     private final UserMapper mapper;
     private UnitOfWork unitOfWork;
 
-    public UserRepository(Connection connection) {
+    public UserRepository(Connection connection) throws SQLException {
         this.connection = connection;
         this.mapper = new UserMapper(connection);
-        this.unitOfWork = new UnitOfWork(connection);
+        this.unitOfWork = new UnitOfWork(mapper);
     }
 
     public Optional<User> findById(Long id){
@@ -20,7 +20,7 @@ public class UserRepository {
     }
 
     public void beginTransaction(){
-        this.unitOfWork = new UnitOfWork(connection);
+        this.unitOfWork = new UnitOfWork(mapper);
     }
 
     public void insert(User user){
