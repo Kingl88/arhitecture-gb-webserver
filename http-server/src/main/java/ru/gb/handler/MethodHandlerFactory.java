@@ -1,7 +1,7 @@
 package ru.gb.handler;
 
 import ru.gb.HttpServer;
-import ru.gb.service.SocketService;
+import ru.gb.config.Config;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.*;
 
 public class MethodHandlerFactory {
-    public static MethodHandler create(SocketService socketService, String www) {
+    public static MethodHandler create(Config config) {
         SortedMap<Integer, Class<MethodHandler>> mapClasses = new TreeMap<>();
         String packageName = "ru.gb.handler";
         ClassLoader classLoader = HttpServer.class.getClassLoader();
@@ -37,19 +37,19 @@ public class MethodHandlerFactory {
             }
         }
 
-        return creatHandler(mapClasses.size(), mapClasses, socketService, www, 0);
+        return creatHandler(mapClasses.size(), mapClasses, config, 0);
 //        PutMethodHandler putMethodHandler = new PutMethodHandler("PUT", null, socketService, www);
 //        PostMethodHandler postMethodHandler = new PostMethodHandler("POST", putMethodHandler, socketService, www);
 //        return new GetMethodHandler("GET", postMethodHandler, socketService, www);
     }
 
-    private static MethodHandler creatHandler(int size, SortedMap<Integer, Class<MethodHandler>> mapClasses, SocketService socketService, String www, int index){
+    private static MethodHandler creatHandler(int size, SortedMap<Integer, Class<MethodHandler>> mapClasses, Config config, int index){
         if(size == 0){
             return null;
         } else {
             try {
                 String method = mapClasses.get(index).getSimpleName().split("M")[0];
-                return mapClasses.get(index).getConstructor(String.class, MethodHandler.class, SocketService.class, String.class).newInstance(method, creatHandler(size - 1,mapClasses, socketService, www, ++index), socketService,www );
+                return mapClasses.get(index).getConstructor(String.class, MethodHandler.class, Config.class).newInstance(method, creatHandler(size - 1,mapClasses, config, ++index), config );
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                      NoSuchMethodException e) {
                 throw new RuntimeException(e);
