@@ -12,19 +12,17 @@ import java.util.Objects;
 public abstract class MethodHandler {
     private final String method;
     private final MethodHandler next;
-    protected final SocketService socketService;
 
-    public MethodHandler(String method, MethodHandler next, SocketService socketService) {
+    public MethodHandler(String method, MethodHandler next) {
         this.method = method;
         this.next = next;
-        this.socketService = socketService;
     }
-    public void handle(HttpRequest request){
+    public void handle(HttpRequest request, SocketService socketService){
         HttpResponse response;
         if(method.equalsIgnoreCase(request.getMethod())){
            response = handleInternal(request);
         } else if (Objects.nonNull(next)) {
-            next.handle(request);
+            next.handle(request, socketService);
             return;
         } else {
             response = HttpResponse.createResponseBuilder()

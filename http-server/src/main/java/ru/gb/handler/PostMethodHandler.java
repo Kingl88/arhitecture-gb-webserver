@@ -1,5 +1,6 @@
 package ru.gb.handler;
 
+import ru.gb.config.Config;
 import ru.gb.service.SocketService;
 import ru.gb.domain.HttpRequest;
 import ru.gb.domain.HttpResponse;
@@ -8,11 +9,11 @@ import java.io.StringReader;
 import java.util.Map;
 @Handler(order = 1)
 public class PostMethodHandler extends MethodHandler{
-    private final String www;
+    private final Config config;
 
-    public PostMethodHandler(String method, MethodHandler next, SocketService socketService, String www) {
-        super(method, next, socketService);
-        this.www = www;
+    public PostMethodHandler(String method, MethodHandler next, Config config) {
+        super(method, next);
+        this.config = config;
     }
 
     @Override

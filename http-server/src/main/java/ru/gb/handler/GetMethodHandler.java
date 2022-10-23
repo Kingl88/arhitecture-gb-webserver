@@ -1,5 +1,6 @@
 package ru.gb.handler;
 
+import ru.gb.config.Config;
 import ru.gb.service.SocketService;
 import ru.gb.domain.HttpRequest;
 import ru.gb.domain.HttpResponse;
@@ -12,15 +13,15 @@ import java.nio.file.Paths;
 import java.util.Map;
 @Handler(order = 0)
 public class GetMethodHandler extends MethodHandler{
-    private final String www;
+    private final Config config;
 
-    public GetMethodHandler(String method, MethodHandler next, SocketService socketService, String www) {
-        super(method, next, socketService);
-        this.www = www;
+    public GetMethodHandler(String method, MethodHandler next, Config config) {
+        super(method, next);
+        this.config = config;
     }
     @Override
     protected HttpResponse handleInternal(HttpRequest request) {
-        Path path = Paths.get(www, request.getPath());
+        Path path = Paths.get(config.getWwwHome(), request.getPath());
         if (!Files.exists(path)) {
             return HttpResponse.createResponseBuilder()
                     .withStatusCode(404)

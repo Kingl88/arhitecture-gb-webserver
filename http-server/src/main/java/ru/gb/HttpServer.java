@@ -1,5 +1,8 @@
 package ru.gb;
 
+import ru.gb.config.Config;
+import ru.gb.config.ConfigFromFile;
+import ru.gb.handler.MethodHandler;
 import ru.gb.handler.MethodHandlerFactory;
 import ru.gb.handler.RequestHandler;
 import ru.gb.logger.Logger;
@@ -16,7 +19,9 @@ public class HttpServer {
     private static final Logger logger = LoggerFactory.create("ServerLog.txt");
 
     public static void main(String[] args) {
-        try (ServerSocket serverSocket = new ServerSocket(8088)) {
+        Config config = new ConfigFromFile("./../../../server.properties");
+        MethodHandler handler = MethodHandlerFactory.create(config);
+        try (ServerSocket serverSocket = new ServerSocket(config.getPort())) {
             logger.info("Server started!");
 
             while (true) {
@@ -24,9 +29,7 @@ public class HttpServer {
                 logger.info("New client connected!");
                 SocketService socketService = SocketServiceFactory.createSocketService(socket);
                 new Thread(new RequestHandler(RequestParserImpl.createRequestParser(),
-                        socketService,
-                        MethodHandlerFactory.create(socketService,
-                        WWW))).start();
+                        socketService,handler)).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
