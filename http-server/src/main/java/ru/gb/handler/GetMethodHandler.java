@@ -1,6 +1,7 @@
 package ru.gb.handler;
 
 import ru.gb.config.Config;
+import ru.gb.domain.HttpCode;
 import ru.gb.service.SocketService;
 import ru.gb.domain.HttpRequest;
 import ru.gb.domain.HttpResponse;
@@ -24,7 +25,7 @@ public class GetMethodHandler extends MethodHandler{
         Path path = Paths.get(config.getWwwHome(), request.getPath());
         if (!Files.exists(path)) {
             return HttpResponse.createResponseBuilder()
-                    .withStatusCode(404)
+                    .withStatusCode(HttpCode.NOT_FOUND)
                     .withHeaders(Map.of("Content-Type", "text/html; charset=utf-8"))
                     .withBody(new StringReader("<h1>Файл не найден!</h1>\n"))
                     .build();
@@ -32,7 +33,7 @@ public class GetMethodHandler extends MethodHandler{
 
         try {
             return HttpResponse.createResponseBuilder()
-                    .withStatusCode(200)
+                    .withStatusCode(HttpCode.OK)
                     .withHeaders(Map.of("Content-Type", "text/html; charset=utf-8"))
                     .withBody(Files.newBufferedReader(path))
                     .build();

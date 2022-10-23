@@ -1,6 +1,7 @@
 package ru.gb.handler;
 
 import ru.gb.ResponseSerializerImpl;
+import ru.gb.domain.HttpCode;
 import ru.gb.service.SocketService;
 import ru.gb.domain.HttpRequest;
 import ru.gb.domain.HttpResponse;
@@ -26,7 +27,7 @@ public abstract class MethodHandler {
             return;
         } else {
             response = HttpResponse.createResponseBuilder()
-                    .withStatusCode(405)
+                    .withStatusCode(HttpCode.METHOD_NOT_ALLOWED)
                     .withHeaders(Map.of("Content-Type", "text/html; charset=utf-8"))
                     .withBody(new StringReader("<h1>Method not allowed</h1>\n"))
                     .build();

@@ -15,15 +15,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class HttpServer {
-    private static final String WWW = "C:/Users/siarh/IdeaProjects/arhitecture-gb-webserver/www/";
     private static final Logger logger = LoggerFactory.create("ServerLog.txt");
-
     public static void main(String[] args) {
         Config config = new ConfigFromFile("./../../../server.properties");
         MethodHandler handler = MethodHandlerFactory.create(config);
         try (ServerSocket serverSocket = new ServerSocket(config.getPort())) {
             logger.info("Server started!");
-
             while (true) {
                 Socket socket = serverSocket.accept();
                 logger.info("New client connected!");
