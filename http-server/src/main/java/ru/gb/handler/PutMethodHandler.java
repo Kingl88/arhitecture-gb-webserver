@@ -1,6 +1,7 @@
 package ru.gb.handler;
 
 import ru.gb.config.Config;
+import ru.gb.domain.HttpCode;
 import ru.gb.domain.HttpRequest;
 import ru.gb.domain.HttpResponse;
 import ru.gb.service.SocketService;
@@ -18,7 +19,7 @@ public class PutMethodHandler extends MethodHandler{
     @Override
     protected HttpResponse handleInternal(HttpRequest request) {
         return HttpResponse.createResponseBuilder()
-                .withStatusCode(404)
+                .withStatusCode(HttpCode.NOT_FOUND)
                 .withHeaders(Map.of("Content-Type", "text/html; charset=utf-8"))
                 .withBody(new StringReader("<h1>Метод PUT</h1>\n"))
                 .build();

@@ -40,13 +40,12 @@ public class RequestParserImpl implements RequestParser {
             }
             body = builder.toString();
         }
-        HttpRequest request = HttpRequest.createRequestBuilder()
+
+        return HttpRequest.createRequestBuilder()
                 .withMethod(method)
                 .withPath(path)
                 .withHeader(headers)
                 .withBody(body)
                 .build();
-
-        return request;
     }
 }
